@@ -71,7 +71,9 @@ class ValidatorBase:
         """
 
     @abc.abstractmethod
-    def validate_must_contain(self, config, header, directive=None, cookie=None):
+    def validate_must_contain(
+        self, config, header, directive=None, cookie=None
+    ):
         """Validates that a header, directive or cookie contains all of a list of expected values.
 
         Args:
@@ -82,7 +84,9 @@ class ValidatorBase:
         """
 
     @abc.abstractmethod
-    def validate_must_contain_one(self, config, header, directive=None, cookie=None):
+    def validate_must_contain_one(
+        self, config, header, directive=None, cookie=None
+    ):
         """Validates that a header, directive or cookie contains one or more of a list of expected values.
 
         Args:
@@ -106,8 +110,8 @@ class UnsupportedValidationError(Exception):
 
 
 def get_delimiter(config, delimiter_type):
-    if 'delimiters' in config:
-        return config['delimiters'].get(delimiter_type)
+    if "delimiters" in config:
+        return config["delimiters"].get(delimiter_type)
 
 
 def get_expected_values(config, key, delimiter):

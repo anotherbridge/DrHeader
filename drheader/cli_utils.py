@@ -6,7 +6,8 @@ import json
 import os
 
 import click
-from junit_xml import TestSuite, TestCase
+from junit_xml import TestCase
+from junit_xml import TestSuite
 
 
 def echo_bulk_report(audit, json_output=False):
@@ -20,14 +21,16 @@ def echo_bulk_report(audit, json_output=False):
         click.echo(json.dumps(audit))
     else:
         for i in audit:
-            issues_header = '{url}: {issues} issues'.format(issues=len(i['report']), url=i['url'])
+            issues_header = "{url}: {issues} issues".format(
+                issues=len(i["report"]), url=i["url"]
+            )
             click.echo()
             click.echo(issues_header)
-            click.echo('=' * len(issues_header))
-            for _ in i['report']:
+            click.echo("=" * len(issues_header))
+            for _ in i["report"]:
                 for v, k in _.items():
-                    click.echo('{}: {}'.format(v, k))
-                click.echo('----')
+                    click.echo("{}: {}".format(v, k))
+                click.echo("----")
 
 
 def file_junit_report(rules, report):
@@ -42,18 +45,22 @@ def file_junit_report(rules, report):
     for header in rules:
         tc = []
         for item in report:
-            if item.get('rule') == header:
+            if item.get("rule") == header:
                 violation = item.copy()
-                violation.pop('rule')
-                message = violation.pop('message')
-                tc = TestCase(name=header + ' :: ' + message)
+                violation.pop("rule")
+                message = violation.pop("message")
+                tc = TestCase(name=header + " :: " + message)
                 tc.add_failure_info(message, violation)
                 test_cases.append(tc)
         if not tc:
             tc = TestCase(name=header)
             test_cases.append(tc)
 
-    os.makedirs('reports', exist_ok=True)
-    with open('reports/junit.xml', 'w') as f:
-        TestSuite.to_file(f, [TestSuite(name='DrHeader', test_cases=test_cases)], prettyprint=False)
+    os.makedirs("reports", exist_ok=True)
+    with open("reports/junit.xml", "w") as f:
+        TestSuite.to_file(
+            f,
+            [TestSuite(name="DrHeader", test_cases=test_cases)],
+            prettyprint=False,
+        )
         f.close()

@@ -17,7 +17,14 @@ class KeyValueDirective(NamedTuple):
     raw_value: str = None
 
 
-def parse_policy(policy, item_delimiter=None, key_delimiter=None, value_delimiter=None, strip=None, keys_only=False):
+def parse_policy(
+    policy,
+    item_delimiter=None,
+    key_delimiter=None,
+    value_delimiter=None,
+    strip=None,
+    keys_only=False,
+):
     """Parses a policy string into a list of individual directives.
 
     Args:
@@ -34,7 +41,9 @@ def parse_policy(policy, item_delimiter=None, key_delimiter=None, value_delimite
     if not item_delimiter:
         return [policy.strip(strip)]
     elif not key_delimiter:
-        return [item.strip(strip) for item in policy.strip().split(item_delimiter)]
+        return [
+            item.strip(strip) for item in policy.strip().split(item_delimiter)
+        ]
     else:
         policy_items = [item for item in policy.strip().split(item_delimiter)]
         directives = []
@@ -46,7 +55,9 @@ def parse_policy(policy, item_delimiter=None, key_delimiter=None, value_delimite
             if keys_only:
                 directives.append(split_item[0].strip())
             else:
-                key_value_directive = _extract_key_value_directive(split_item, value_delimiter, strip)
+                key_value_directive = _extract_key_value_directive(
+                    split_item, value_delimiter, strip
+                )
                 directives.append(key_value_directive)
     return directives
 
@@ -66,24 +77,28 @@ def load_rules(rule_file=None, merge=False):
         A dict containing the loaded rules.
     """
     if rule_file:
-        logging.debug('')
+        logging.debug("")
         rules = yaml.safe_load(rule_file.read())
         if merge:
-            with open(os.path.join(os.path.dirname(__file__), 'rules.yml'), 'r') as f:
+            with open(
+                os.path.join(os.path.dirname(__file__), "rules.yml"), "r"
+            ) as f:
                 default_rules = yaml.safe_load(f.read())
             rules = _merge_rules(default_rules, rules)
     else:
-        with open(os.path.join(os.path.dirname(__file__), 'rules.yml'), 'r') as f:
+        with open(
+            os.path.join(os.path.dirname(__file__), "rules.yml"), "r"
+        ) as f:
             rules = yaml.safe_load(f.read())
 
-    return rules['Headers']
+    return rules["Headers"]
 
 
 def get_rules_from_uri(uri):
     """Retrieves a rules file from a URL."""
     download = requests.get(uri)
     if not download.content:
-        raise Exception('No content retrieved from {}'.format(uri))
+        raise Exception("No content retrieved from {}".format(uri))
     file = io.BytesIO(download.content)
     return file
 
@@ -98,7 +113,9 @@ def translate_to_case_insensitive_dict(dict_to_translate):
 
 def _extract_key_value_directive(directive, value_delimiter, strip):
     if value_delimiter:
-        value_items = list(filter(lambda s: s.strip(), directive[1].split(value_delimiter)))
+        value_items = list(
+            filter(lambda s: s.strip(), directive[1].split(value_delimiter))
+        )
         value = [item.strip(strip) for item in value_items]
     else:
         value = [directive[1].strip(strip)]
@@ -106,7 +123,7 @@ def _extract_key_value_directive(directive, value_delimiter, strip):
 
 
 def _merge_rules(default_rules, custom_rules):
-    for rule in custom_rules['Headers']:
-        default_rules['Headers'][rule] = custom_rules['Headers'][rule]
+    for rule in custom_rules["Headers"]:
+        default_rules["Headers"][rule] = custom_rules["Headers"][rule]
 
     return default_rules
