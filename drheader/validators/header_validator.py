@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# coding: utf-8
 """Validator module for headers."""
 from drheader import report, utils
 from drheader.validators import base

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# coding: utf-8
 """Primary module for report generation and storage."""
 import enum
 from typing import NamedTuple

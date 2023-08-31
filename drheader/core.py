@@ -6,8 +6,11 @@ import requests
 import validators
 from requests import structures
 
-from drheader import report, utils
-from drheader.validators import cookie_validator, directive_validator, header_validator
+from drheader import report
+from drheader import utils
+from drheader.validators import cookie_validator
+from drheader.validators import directive_validator
+from drheader.validators import header_validator
 
 _CROSS_ORIGIN_HEADERS = ['cross-origin-embedder-policy', 'cross-origin-opener-policy']
 
